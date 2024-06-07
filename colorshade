@@ -1,0 +1,77 @@
+import os
+from PIL import Image
+
+def apply_red_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    r = r.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_green_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    g = g.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_blue_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    b = b.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_cyan_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    g = g.point(lambda i: min(i * 1.5, 255))
+    b = b.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_magenta_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    r = r.point(lambda i: min(i * 1.5, 255))
+    b = b.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_yellow_filter(image):
+    image = image.convert("RGB")
+    r, g, b = image.split()
+    r = r.point(lambda i: min(i * 1.5, 255))
+    g = g.point(lambda i: min(i * 1.5, 255))
+    return Image.merge("RGB", (r, g, b))
+
+def apply_grayscale_filter(image):
+    return image.convert("L")
+
+def process_images_in_folder(folder_path):
+    if not os.path.isdir(folder_path):
+        print(f"The folder {folder_path} does not exist.")
+        return
+
+    transformations = {
+        "red": apply_red_filter,
+        "green": apply_green_filter,
+        "blue": apply_blue_filter,
+        "cyan": apply_cyan_filter,
+        "magenta": apply_magenta_filter,
+        "yellow": apply_yellow_filter,
+        "grayscale": apply_grayscale_filter
+    }
+
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg', '.bmp', '.gif')):
+            try:
+                with Image.open(file_path) as img:
+                    for name, transform in transformations.items():
+                        transformed_img = transform(img)
+                        new_filename = f"{os.path.splitext(filename)[0]}{name}{os.path.splitext(filename)[1]}"
+                        new_file_path = os.path.join(folder_path, new_filename)
+                        transformed_img.save(new_file_path)
+                        print(f"Saved {new_filename}")
+            except Exception as e:
+                print(f"Could not process file {filename}: {e}")
+
+'''Replace 'your_folder_path' with the path to your folder containing images'''
+folder_path = 'C:\Python output\scg\checkpicture'
+process_images_in_folder(folder_path)
